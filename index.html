@@ -2,40 +2,84 @@
 <html lang="no">
 <head>
 <meta charset="UTF-8">
-<title>Outfit Spinner</title>
+<title>Outfit Builder</title>
+
 <style>
 body {
-    font-family: Arial, sans-serif;
-    background: #f2f2f2;
     margin: 0;
+    font-family: system-ui, Arial, sans-serif;
+    background: linear-gradient(135deg, #dbeafe, #f8fafc);
     text-align: center;
 }
 
-button, select {
-    padding: 10px 15px;
+h1 {
+    margin: 15px 0;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 15px;
+    margin: 15px auto;
+    max-width: 420px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+button {
+    background: #111827;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 12px 18px;
     font-size: 16px;
+    cursor: pointer;
     margin: 5px;
 }
 
-#app {
-    display: none;
-    padding: 20px;
+button:hover {
+    background: #1f2937;
 }
 
-#camera {
-    width: 90%;
-    max-width: 400px;
-    border-radius: 10px;
+select {
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 16px;
+}
+
+video {
+    width: 100%;
+    border-radius: 16px;
+    margin-top: 10px;
+}
+
+.gallery {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 10px 0;
+}
+
+.gallery img {
+    width: 80px;
+    border-radius: 12px;
 }
 
 #outfit {
-    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .outfit-img {
-    width: 150px;
-    margin: 5px;
-    border-radius: 10px;
+    width: 170px;
+    margin: 6px;
+    border-radius: 16px;
+    animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
 }
 
 .hidden {
@@ -43,33 +87,40 @@ button, select {
 }
 </style>
 </head>
+
 <body>
 
-<h1>👕 Outfit Spinner</h1>
+<h1>👕 Outfit Builder</h1>
 
 <button id="startBtn">Start</button>
 
-<div id="app">
-    <h2>Legg til klær</h2>
+<div id="app" class="hidden">
 
-    <select id="category">
-        <option value="genser">Genser</option>
-        <option value="tshirt">T-skjorte</option>
-        <option value="bukse">Bukse</option>
-        <option value="sko">Sko</option>
-    </select>
+    <div class="card">
+        <h2>📸 Legg til klær</h2>
 
-    <br><br>
+        <select id="category">
+            <option value="genser">🧥 Genser</option>
+            <option value="tshirt">👕 T-skjorte</option>
+            <option value="bukse">👖 Bukse</option>
+            <option value="sko">👟 Sko</option>
+        </select>
 
-    <video id="camera" autoplay></video><br>
-    <button id="takePhoto">Ta bilde</button>
+        <video id="camera" autoplay playsinline></video>
+        <button id="takePhoto">Ta bilde</button>
+    </div>
 
-    <hr>
+    <div class="card">
+        <h2>🖼️ Dine klær</h2>
+        <div id="gallery" class="gallery"></div>
+    </div>
 
-    <h2>🎰 Outfit</h2>
-    <button id="spin">Spin</button>
+    <div class="card">
+        <h2>🎰 Outfit</h2>
+        <button id="spin">Spin</button>
+        <div id="outfit"></div>
+    </div>
 
-    <div id="outfit"></div>
 </div>
 
 <script>
@@ -78,8 +129,11 @@ const app = document.getElementById("app");
 const camera = document.getElementById("camera");
 const takePhotoBtn = document.getElementById("takePhoto");
 const categorySelect = document.getElementById("category");
-const outfitDiv = document.getElementById("outfit");
+const gallery = document.getElementById("gallery");
 const spinBtn = document.getElementById("spin");
+const outfitDiv = document.getElementById("outfit");
+
+let stream;
 
 const clothes = JSON.parse(localStorage.getItem("clothes")) || {
     genser: [],
@@ -88,11 +142,24 @@ const clothes = JSON.parse(localStorage.getItem("clothes")) || {
     sko: []
 };
 
-startBtn.onclick = async () => {
-    startBtn.style.display = "none";
-    app.style.display = "block";
+function save() {
+    localStorage.setItem("clothes", JSON.stringify(clothes));
+}
 
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+function updateGallery() {
+    gallery.innerHTML = "";
+    Object.values(clothes).flat().forEach(src => {
+        const img = document.createElement("img");
+        img.src = src;
+        gallery.appendChild(img);
+    });
+}
+
+startBtn.onclick = async () => {
+    startBtn.classList.add("hidden");
+    app.classList.remove("hidden");
+
+    stream = await navigator.mediaDevices.getUserMedia({ video: true });
     camera.srcObject = stream;
 };
 
@@ -100,6 +167,7 @@ takePhotoBtn.onclick = () => {
     const canvas = document.createElement("canvas");
     canvas.width = camera.videoWidth;
     canvas.height = camera.videoHeight;
+
     const ctx = canvas.getContext("2d");
     ctx.drawImage(camera, 0, 0);
 
@@ -107,25 +175,27 @@ takePhotoBtn.onclick = () => {
     const category = categorySelect.value;
 
     clothes[category].push(imgData);
-    localStorage.setItem("clothes", JSON.stringify(clothes));
-
-    alert(category + " lagret!");
+    save();
+    updateGallery();
 };
 
 spinBtn.onclick = () => {
-    outfitDiv.innerHTML = "";
+    outfitDiv.innerHTML = "🎰 Spinning...";
 
-    const order = ["genser", "tshirt", "bukse", "sko"];
-
-    order.forEach(type => {
-        if (clothes[type].length > 0) {
-            const img = document.createElement("img");
-            img.className = "outfit-img";
-            img.src = clothes[type][Math.floor(Math.random() * clothes[type].length)];
-            outfitDiv.appendChild(img);
-        }
-    });
+    setTimeout(() => {
+        outfitDiv.innerHTML = "";
+        ["genser", "tshirt", "bukse", "sko"].forEach(type => {
+            if (clothes[type].length > 0) {
+                const img = document.createElement("img");
+                img.className = "outfit-img";
+                img.src = clothes[type][Math.floor(Math.random() * clothes[type].length)];
+                outfitDiv.appendChild(img);
+            }
+        });
+    }, 800);
 };
+
+updateGallery();
 </script>
 
 </body>
