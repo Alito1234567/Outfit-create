@@ -2,107 +2,113 @@
 <html lang="no">
 <head>
 <meta charset="UTF-8">
-<title>NEON OUTFIT</title>
+<title>Outfit Studio</title>
 
 <style>
 :root {
-    --neon: #00ffe7;
-    --neon-pink: #ff00ff;
-    --bg: #05050a;
+    --bg: #05060a;
+    --card: #0b0f1a;
+    --neon: #00f6ff;
+    --neon-soft: rgba(0,246,255,0.3);
+    --text: #e5e7eb;
+    --danger: #ff355e;
 }
 
 body {
     margin: 0;
-    font-family: "Segoe UI", system-ui, sans-serif;
-    background: radial-gradient(circle at top, #0a0a14, #000);
-    color: var(--neon);
-    text-align: center;
+    font-family: "Inter", system-ui, sans-serif;
+    background: radial-gradient(circle at top, #0a0f1f, #000);
+    color: var(--text);
 }
 
 h1 {
-    margin: 20px 0;
-    font-size: 2.2em;
-    text-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon);
-}
-
-.card {
-    background: rgba(10, 10, 20, 0.85);
-    border: 1px solid rgba(0,255,231,0.3);
-    border-radius: 20px;
-    padding: 15px;
-    margin: 15px auto;
-    max-width: 420px;
-    box-shadow: 0 0 20px rgba(0,255,231,0.15);
+    text-align: center;
+    margin: 25px 0;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--neon);
+    text-shadow: 0 0 12px var(--neon-soft);
 }
 
 h2 {
-    color: var(--neon-pink);
-    text-shadow: 0 0 10px var(--neon-pink);
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: var(--neon);
 }
 
-button {
+button, select {
     background: transparent;
     color: var(--neon);
-    border: 2px solid var(--neon);
-    border-radius: 14px;
-    padding: 12px 18px;
-    font-size: 16px;
+    border: 1px solid var(--neon);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 14px;
     cursor: pointer;
-    margin: 6px;
-    box-shadow: 0 0 10px rgba(0,255,231,0.4);
 }
 
 button:hover {
     background: var(--neon);
-    color: black;
+    color: #000;
 }
 
 select {
-    background: black;
-    color: var(--neon);
-    border: 2px solid var(--neon);
-    border-radius: 12px;
-    padding: 10px;
-    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.container {
+    max-width: 440px;
+    margin: auto;
+}
+
+.card {
+    background: var(--card);
+    border-radius: 20px;
+    padding: 15px;
+    margin: 15px;
+    box-shadow: 0 0 25px rgba(0,0,0,0.6);
 }
 
 video {
     width: 100%;
-    border-radius: 16px;
+    border-radius: 14px;
     margin-top: 10px;
-    box-shadow: 0 0 15px rgba(0,255,231,0.4);
+    box-shadow: 0 0 20px var(--neon-soft);
+}
+
+.category {
+    margin-bottom: 15px;
 }
 
 .gallery {
     display: flex;
     gap: 10px;
     overflow-x: auto;
-    padding: 10px 0;
 }
 
 .item {
     position: relative;
 }
 
-.gallery img {
+.item img {
     width: 80px;
     border-radius: 12px;
-    box-shadow: 0 0 10px rgba(255,0,255,0.6);
+    box-shadow: 0 0 12px rgba(0,246,255,0.4);
 }
 
 .delete {
     position: absolute;
     top: -6px;
     right: -6px;
-    background: #ff0055;
-    color: white;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
-    width: 22px;
-    height: 22px;
-    font-size: 14px;
-    line-height: 22px;
+    background: var(--danger);
+    color: white;
+    font-size: 12px;
+    line-height: 20px;
+    text-align: center;
     cursor: pointer;
-    box-shadow: 0 0 10px #ff0055;
 }
 
 #outfit {
@@ -115,13 +121,13 @@ video {
     width: 170px;
     margin: 6px;
     border-radius: 16px;
-    box-shadow: 0 0 20px rgba(0,255,231,0.6);
-    animation: glow 0.4s ease;
+    box-shadow: 0 0 25px var(--neon-soft);
+    animation: fade 0.4s ease;
 }
 
-@keyframes glow {
-    from { transform: scale(0.8); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+@keyframes fade {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 .hidden {
@@ -132,126 +138,49 @@ video {
 
 <body>
 
-<h1>⚡ NEON OUTFIT ⚡</h1>
+<h1>OUTFIT STUDIO</h1>
 
-<button id="startBtn">START</button>
+<div class="container">
+<button id="startBtn">Start</button>
 
 <div id="app" class="hidden">
 
     <div class="card">
-        <h2>📸 SCAN PLAGG</h2>
-
+        <h2>Add Clothing Item</h2>
         <select id="category">
-            <option value="genser">🧥 Genser</option>
-            <option value="tshirt">👕 T-skjorte</option>
-            <option value="bukse">👖 Bukse</option>
-            <option value="sko">👟 Sko</option>
+            <option value="genser">Sweater</option>
+            <option value="tshirt">T-Shirt</option>
+            <option value="bukse">Pants</option>
+            <option value="sko">Shoes</option>
         </select>
 
         <video id="camera" autoplay playsinline></video>
-        <button id="takePhoto">CAPTURE</button>
+        <button id="takePhoto">Capture</button>
     </div>
 
     <div class="card">
-        <h2>🧬 DITT ARKIV</h2>
-        <div id="gallery" class="gallery"></div>
+        <h2>Wardrobe</h2>
+
+        <div class="category">
+            <strong>Sweaters</strong>
+            <div id="genser" class="gallery"></div>
+        </div>
+
+        <div class="category">
+            <strong>T-Shirts</strong>
+            <div id="tshirt" class="gallery"></div>
+        </div>
+
+        <div class="category">
+            <strong>Pants</strong>
+            <div id="bukse" class="gallery"></div>
+        </div>
+
+        <div class="category">
+            <strong>Shoes</strong>
+            <div id="sko" class="gallery"></div>
+        </div>
     </div>
 
     <div class="card">
-        <h2>🎰 GENERER OUTFIT</h2>
-        <button id="spin">SPIN</button>
-        <div id="outfit"></div>
-    </div>
-
-</div>
-
-<script>
-const startBtn = document.getElementById("startBtn");
-const app = document.getElementById("app");
-const camera = document.getElementById("camera");
-const takePhotoBtn = document.getElementById("takePhoto");
-const categorySelect = document.getElementById("category");
-const gallery = document.getElementById("gallery");
-const spinBtn = document.getElementById("spin");
-const outfitDiv = document.getElementById("outfit");
-
-let stream;
-
-const clothes = JSON.parse(localStorage.getItem("clothes")) || {
-    genser: [],
-    tshirt: [],
-    bukse: [],
-    sko: []
-};
-
-function save() {
-    localStorage.setItem("clothes", JSON.stringify(clothes));
-}
-
-function updateGallery() {
-    gallery.innerHTML = "";
-
-    Object.keys(clothes).forEach(type => {
-        clothes[type].forEach((src, index) => {
-            const wrapper = document.createElement("div");
-            wrapper.className = "item";
-
-            const img = document.createElement("img");
-            img.src = src;
-
-            const del = document.createElement("div");
-            del.className = "delete";
-            del.innerText = "✕";
-            del.onclick = () => {
-                clothes[type].splice(index, 1);
-                save();
-                updateGallery();
-            };
-
-            wrapper.appendChild(img);
-            wrapper.appendChild(del);
-            gallery.appendChild(wrapper);
-        });
-    });
-}
-
-startBtn.onclick = async () => {
-    startBtn.classList.add("hidden");
-    app.classList.remove("hidden");
-
-    stream = await navigator.mediaDevices.getUserMedia({ video: true });
-    camera.srcObject = stream;
-};
-
-takePhotoBtn.onclick = () => {
-    const canvas = document.createElement("canvas");
-    canvas.width = camera.videoWidth;
-    canvas.height = camera.videoHeight;
-    canvas.getContext("2d").drawImage(camera, 0, 0);
-
-    clothes[categorySelect.value].push(canvas.toDataURL("image/png"));
-    save();
-    updateGallery();
-};
-
-spinBtn.onclick = () => {
-    outfitDiv.innerHTML = "⚡ GENERATING...";
-
-    setTimeout(() => {
-        outfitDiv.innerHTML = "";
-        ["genser", "tshirt", "bukse", "sko"].forEach(type => {
-            if (clothes[type].length) {
-                const img = document.createElement("img");
-                img.className = "outfit-img";
-                img.src = clothes[type][Math.floor(Math.random() * clothes[type].length)];
-                outfitDiv.appendChild(img);
-            }
-        });
-    }, 800);
-};
-
-updateGallery();
-</script>
-
-</body>
-</html>
+        <
