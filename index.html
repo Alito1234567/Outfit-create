@@ -9,40 +9,84 @@
     --bg: #05060a;
     --card: #0b0f1a;
     --neon: #00f6ff;
-    --neon-soft: rgba(0,246,255,0.3);
+    --neon-soft: rgba(0,246,255,0.35);
     --text: #e5e7eb;
     --danger: #ff355e;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
-    font-family: "Inter", system-ui, sans-serif;
+    font-family: Inter, system-ui, sans-serif;
     background: radial-gradient(circle at top, #0a0f1f, #000);
     color: var(--text);
 }
 
-h1 {
+/* ---------- INTRO ---------- */
+
+.start-screen {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 1.2s ease;
+}
+
+.start-box {
     text-align: center;
-    margin: 25px 0;
-    font-weight: 600;
-    letter-spacing: 1px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.start-box h1 {
     color: var(--neon);
-    text-shadow: 0 0 12px var(--neon-soft);
+    letter-spacing: 3px;
+    font-weight: 600;
+    text-shadow: 0 0 20px var(--neon-soft);
+    margin-bottom: 30px;
+}
+
+.start-box button {
+    font-size: 16px;
+    padding: 14px 26px;
+}
+
+/* ---------- LAYOUT ---------- */
+
+.hidden {
+    display: none;
+}
+
+.container {
+    max-width: 460px;
+    margin: auto;
+    animation: fadeIn 0.8s ease;
+}
+
+.card {
+    background: var(--card);
+    border-radius: 22px;
+    padding: 16px;
+    margin: 16px;
+    box-shadow: 0 0 35px rgba(0,0,0,0.7);
 }
 
 h2 {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 500;
-    margin-bottom: 10px;
+    letter-spacing: 1px;
     color: var(--neon);
+    margin-bottom: 12px;
 }
 
 button, select {
     background: transparent;
     color: var(--neon);
     border: 1px solid var(--neon);
-    border-radius: 12px;
-    padding: 10px 14px;
+    border-radius: 14px;
+    padding: 10px 16px;
     font-size: 14px;
     cursor: pointer;
 }
@@ -53,31 +97,29 @@ button:hover {
 }
 
 select {
+    width: 100%;
     margin-bottom: 10px;
 }
 
-.container {
-    max-width: 440px;
-    margin: auto;
-}
-
-.card {
-    background: var(--card);
-    border-radius: 20px;
-    padding: 15px;
-    margin: 15px;
-    box-shadow: 0 0 25px rgba(0,0,0,0.6);
-}
+/* ---------- CAMERA ---------- */
 
 video {
     width: 100%;
-    border-radius: 14px;
+    border-radius: 16px;
     margin-top: 10px;
-    box-shadow: 0 0 20px var(--neon-soft);
+    box-shadow: 0 0 25px var(--neon-soft);
 }
 
+/* ---------- GALLERY ---------- */
+
 .category {
-    margin-bottom: 15px;
+    margin-bottom: 14px;
+}
+
+.category-title {
+    font-size: 13px;
+    margin-bottom: 6px;
+    opacity: 0.85;
 }
 
 .gallery {
@@ -93,7 +135,7 @@ video {
 .item img {
     width: 80px;
     border-radius: 12px;
-    box-shadow: 0 0 12px rgba(0,246,255,0.4);
+    box-shadow: 0 0 14px var(--neon-soft);
 }
 
 .delete {
@@ -111,6 +153,8 @@ video {
     cursor: pointer;
 }
 
+/* ---------- OUTFIT ---------- */
+
 #outfit {
     display: flex;
     flex-direction: column;
@@ -118,35 +162,47 @@ video {
 }
 
 .outfit-img {
-    width: 170px;
+    width: 180px;
     margin: 6px;
-    border-radius: 16px;
-    box-shadow: 0 0 25px var(--neon-soft);
-    animation: fade 0.4s ease;
+    border-radius: 18px;
+    box-shadow: 0 0 30px var(--neon-soft);
+    animation: pop 0.4s ease;
 }
 
-@keyframes fade {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+/* ---------- ANIMATIONS ---------- */
+
+@keyframes fadeIn {
+    from { opacity: 0 }
+    to { opacity: 1 }
 }
 
-.hidden {
-    display: none;
+@keyframes pop {
+    from { opacity: 0; transform: scale(0.9) }
+    to { opacity: 1; transform: scale(1) }
+}
+
+@keyframes float {
+    0%,100% { transform: translateY(0) }
+    50% { transform: translateY(-10px) }
 }
 </style>
 </head>
 
 <body>
 
-<h1>OUTFIT STUDIO</h1>
+<!-- INTRO -->
+<div id="startScreen" class="start-screen">
+    <div class="start-box">
+        <h1>OUTFIT STUDIO</h1>
+        <button id="startBtn">START</button>
+    </div>
+</div>
 
-<div class="container">
-<button id="startBtn">Start</button>
-
-<div id="app" class="hidden">
+<!-- APP -->
+<div id="app" class="container hidden">
 
     <div class="card">
-        <h2>Add Clothing Item</h2>
+        <h2>ADD ITEM</h2>
         <select id="category">
             <option value="genser">Sweater</option>
             <option value="tshirt">T-Shirt</option>
@@ -159,28 +215,126 @@ video {
     </div>
 
     <div class="card">
-        <h2>Wardrobe</h2>
+        <h2>WARDROBE</h2>
 
         <div class="category">
-            <strong>Sweaters</strong>
+            <div class="category-title">Sweaters</div>
             <div id="genser" class="gallery"></div>
         </div>
 
         <div class="category">
-            <strong>T-Shirts</strong>
+            <div class="category-title">T-Shirts</div>
             <div id="tshirt" class="gallery"></div>
         </div>
 
         <div class="category">
-            <strong>Pants</strong>
+            <div class="category-title">Pants</div>
             <div id="bukse" class="gallery"></div>
         </div>
 
         <div class="category">
-            <strong>Shoes</strong>
+            <div class="category-title">Shoes</div>
             <div id="sko" class="gallery"></div>
         </div>
     </div>
 
     <div class="card">
-        <
+        <h2>GENERATE OUTFIT</h2>
+        <button id="spin">Generate</button>
+        <div id="outfit"></div>
+    </div>
+
+</div>
+
+<script>
+const startBtn = document.getElementById("startBtn");
+const startScreen = document.getElementById("startScreen");
+const app = document.getElementById("app");
+const camera = document.getElementById("camera");
+const takePhotoBtn = document.getElementById("takePhoto");
+const categorySelect = document.getElementById("category");
+const spinBtn = document.getElementById("spin");
+const outfitDiv = document.getElementById("outfit");
+
+let stream;
+
+const clothes = JSON.parse(localStorage.getItem("clothes")) || {
+    genser: [],
+    tshirt: [],
+    bukse: [],
+    sko: []
+};
+
+function save() {
+    localStorage.setItem("clothes", JSON.stringify(clothes));
+}
+
+function renderCategory(type) {
+    const container = document.getElementById(type);
+    container.innerHTML = "";
+
+    clothes[type].forEach((src, index) => {
+        const item = document.createElement("div");
+        item.className = "item";
+
+        const img = document.createElement("img");
+        img.src = src;
+
+        const del = document.createElement("div");
+        del.className = "delete";
+        del.innerText = "×";
+        del.onclick = () => {
+            clothes[type].splice(index, 1);
+            save();
+            renderAll();
+        };
+
+        item.appendChild(img);
+        item.appendChild(del);
+        container.appendChild(item);
+    });
+}
+
+function renderAll() {
+    ["genser", "tshirt", "bukse", "sko"].forEach(renderCategory);
+}
+
+startBtn.onclick = async () => {
+    startScreen.classList.add("hidden");
+    app.classList.remove("hidden");
+
+    stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    camera.srcObject = stream;
+};
+
+takePhotoBtn.onclick = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = camera.videoWidth;
+    canvas.height = camera.videoHeight;
+    canvas.getContext("2d").drawImage(camera, 0, 0);
+
+    clothes[categorySelect.value].push(canvas.toDataURL("image/png"));
+    save();
+    renderAll();
+};
+
+spinBtn.onclick = () => {
+    outfitDiv.innerHTML = "Generating...";
+    setTimeout(() => {
+        outfitDiv.innerHTML = "";
+        ["genser", "tshirt", "bukse", "sko"].forEach(type => {
+            if (clothes[type].length) {
+                const img = document.createElement("img");
+                img.className = "outfit-img";
+                img.src = clothes[type][Math.floor(Math.random() * clothes[type].length)];
+                outfitDiv.appendChild(img);
+            }
+        });
+    }, 700);
+};
+
+renderAll();
+</script>
+
+</body>
+</html>
